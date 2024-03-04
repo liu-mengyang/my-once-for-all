@@ -85,6 +85,8 @@ class EvolutionFinder:
         self.max_time_budget = kwargs.get("max_time_budget", 500)
         self.parent_ratio = kwargs.get("parent_ratio", 0.25)
         self.mutation_ratio = kwargs.get("mutation_ratio", 0.5)
+        
+        self.model = kwargs.get("ofa_network")
 
     def invite_reset_constraint_type(self):
         print(
@@ -133,7 +135,9 @@ class EvolutionFinder:
         constraint = self.efficiency_constraint
         while True:
             sample = self.arch_manager.random_sample()
-            efficiency = self.efficiency_predictor.predict_efficiency(sample)
+            self.model.set_active_subnet(ks=sample['ks'], d=sample['d'], e=sample['e'])
+            model = self.model.get_active_subnet()
+            efficiency = self.efficiency_predictor.predict_efficiency(model, [1,3,sample["r"][0],sample["r"][0]])
             if efficiency <= constraint:
                 return sample, efficiency
 
@@ -153,7 +157,11 @@ class EvolutionFinder:
                 if random.random() < self.mutate_prob:
                     self.arch_manager.random_resample_depth(new_sample, i)
 
-            efficiency = self.efficiency_predictor.predict_efficiency(new_sample)
+            self.model.set_active_subnet(ks=new_sample['ks'], d=new_sample['d'], e=new_sample['e'])
+            model = self.model.get_active_subnet()
+            efficiency = self.efficiency_predictor.predict_efficiency(model, [1,3,new_sample["r"][0],new_sample["r"][0]])
+
+            # efficiency = self.efficiency_predictor.predict_efficiency(new_sample)
             if efficiency <= constraint:
                 return new_sample, efficiency
 
@@ -168,8 +176,10 @@ class EvolutionFinder:
                     new_sample[key][i] = random.choice(
                         [sample1[key][i], sample2[key][i]]
                     )
-
-            efficiency = self.efficiency_predictor.predict_efficiency(new_sample)
+            self.model.set_active_subnet(ks=new_sample['ks'], d=new_sample['d'], e=new_sample['e'])
+            model = self.model.get_active_subnet()
+            efficiency = self.efficiency_predictor.predict_efficiency(model, [1,3,new_sample["r"][0],new_sample["r"][0]])
+            # efficiency = self.efficiency_predictor.predict_efficiency(new_sample)
             if efficiency <= constraint:
                 return new_sample, efficiency
 
