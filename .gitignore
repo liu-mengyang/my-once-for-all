@@ -1,5 +1,6 @@
 .vscode/
 .idea/
+.torch
 tmp/
 cache/
 # Created by .ignore support plugin (hsz.mobi)
@@ -113,3 +114,8 @@ venv.bak/
 *.xml
 *.iml
 /bash/distributed_imagenet.sh
+/variables
+
+*.tflite
+*.onnx
+*.pb

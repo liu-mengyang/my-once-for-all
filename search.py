@@ -100,6 +100,7 @@ def main():
 
     print('-----------------------------------------')
     print("Time summary:")
+    print("Count: "+str(latency_predictor.counter))
     print("Convert: "+str(latency_predictor.convert_total_time))
     print("Send: "+str(latency_predictor.send_total_time))
     print("Profile: "+str(latency_predictor.profile_total_time))
