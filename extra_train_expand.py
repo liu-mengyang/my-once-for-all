@@ -218,6 +218,6 @@ if __name__ == "__main__":
     if args.phase == 1:
         args.ofa_checkpoint_path = ".torch/ofa_nets/ofa_mbv3_d234_e346_k357_w1.0"
     else:
-        raise NotImplementedError
+        args.ofa_checkpoint_path = "exp/kernel_depth2kernel_depth_width/phase1/checkpoint/model_best.pth.tar"
     
     train_elastic_expand(train, distributed_run_manager, args, validate_func_dict)
