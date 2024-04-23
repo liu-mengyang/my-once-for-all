@@ -9,6 +9,7 @@ from collections import OrderedDict
 from ofa.utils import get_same_padding, min_divisible_value, SEModule, ShuffleLayer
 from ofa.utils import MyNetwork, MyModule
 from ofa.utils import build_activation, make_divisible
+from ofa.logger import logger
 
 __all__ = [
     "set_layer_from_config",
@@ -613,7 +614,10 @@ class ResidualBlock(MyModule):
         elif self.shortcut is None or isinstance(self.shortcut, ZeroLayer):
             res = self.conv(x)
         else:
-            res = self.conv(x) + self.shortcut(x)
+            main_tensor = self.conv(x)
+            res_tensor = self.shortcut(x)
+            
+            res = main_tensor + res_tensor
         return res
 
     @property

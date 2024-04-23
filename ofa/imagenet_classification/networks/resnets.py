@@ -8,6 +8,7 @@ from ofa.utils.layers import (
 )
 from ofa.utils.layers import ResNetBottleneckBlock, ResidualBlock
 from ofa.utils import make_divisible, MyNetwork, MyGlobalAvgPool2d
+from ofa.logger import logger
 
 __all__ = ["ResNets", "ResNet50", "ResNet50D"]
 
@@ -31,7 +32,17 @@ class ResNets(MyNetwork):
     def forward(self, x):
         for layer in self.input_stem:
             x = layer(x)
+        
+        # kernel_size = 3
+        # stride = 2
+        # padding = 1
+        # in_shape = x.shape
+        # in_channel = x.shape[1]
         x = self.max_pooling(x)
+        # out_shape = x.shape
+        # out_channel = x.shape[1]
+        # logger.info(f"MaxPool: {kernel_size} {stride} {padding} {in_shape} {out_shape} {in_channel} {out_channel}")
+        
         for block in self.blocks:
             x = block(x)
         x = self.global_avg_pool(x)
