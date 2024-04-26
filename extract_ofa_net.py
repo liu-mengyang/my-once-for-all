@@ -31,8 +31,13 @@ parser.add_argument(
     help="OFA networks",
 )
 parser.add_argument("-ns", "--num_samples", default=1)
+parser.add_argument("-log", "--log_file", default=None)
 
 args = parser.parse_args()
+
+if args.log_file:
+    logger.add(args.log_file)
+
 if args.gpu == "all":
     device_list = range(torch.cuda.device_count())
     args.gpu = ",".join(str(_) for _ in device_list)
@@ -72,6 +77,8 @@ for i in tqdm(range(int(args.num_samples))):
     """
     # assign image size: 128, 132, ..., 224
     img_size = random.choice([128, 132, 136, 140, 144, 148, 152, 156, 160, 164, 168, 172, 176, 180, 184, 188, 192, 196, 200, 204, 208, 212, 216, 220, 224])
+    if args.net == "ofa_mbv3_d234_e346_k357_w1.2":
+        img_size = random.choice([160, 164, 168, 172, 176, 180, 184, 188, 192, 196, 200, 204, 208, 212, 216, 220, 224])
     
     # Output information
     logger.info("Registering ...")
