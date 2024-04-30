@@ -2,3 +2,4 @@ filelock
 gdown
 tqdm
 loguru
+scikit-learn

@@ -24,15 +24,15 @@ def main():
     image_size_list = [128, 132, 136, 140, 144, 148, 152, 156, 160, 164,
                            168, 172, 176, 180, 184, 188, 192, 196, 200, 204,
                            208, 212, 216, 220, 224]
-    if path == "resnet50":
+    if args.path == "resnet50":
         arch_encoder = ResNetArchEncoder(image_size_list)
-    elif path == "mbv3w12":
+    elif args.path == "mbv3w12":
         image_size_list = [160, 164, 168, 172, 176, 180, 184, 188, 192, 196,
                            200, 204, 208, 212, 216, 220, 224]
         arch_encoder = MobileNetArchEncoder(image_size_list)
     else:
         arch_encoder = MobileNetArchEncoder(image_size_list)
-    train_dataloader, eval_dataloader, base_acc = dataset.build_acc_data_loader()
+    train_dataloader, eval_dataloader, base_acc = dataset.build_acc_data_loader(arch_encoder)
     print(base_acc)
     predictor = AccuracyPredictor(arch_encoder)
     
