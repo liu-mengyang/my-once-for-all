@@ -10,6 +10,7 @@ import torch
 import torch.utils.data
 
 from ofa.utils import list_mean
+from ofa.tutorial.imagenet_eval_helper import calib_bn
 
 __all__ = ["net_setting2id", "net_id2setting", "AccuracyDataset"]
 
@@ -109,7 +110,8 @@ class AccuracyDataset:
                         t.update()
                         continue
                     ofa_network.set_active_subnet(**net_setting)
-                    run_manager.reset_running_statistics(ofa_network)
+                    subnet = ofa_network.get_active_subnet().to("cuda:0")
+                    calib_bn(subnet, "/datasets/imagenet", image_size, 256)
                     net_setting_str = ",".join(
                         [
                             "%s_%s"
@@ -124,11 +126,12 @@ class AccuracyDataset:
                     )
                     loss, (top1, top5) = run_manager.validate(
                         run_str=net_setting_str,
-                        net=ofa_network,
+                        net=subnet,
                         data_loader=val_dataset,
                         no_logs=True,
                     )
                     info_val = top1
+                    print(info_val)
 
                     t.set_postfix(
                         {

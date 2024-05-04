@@ -15,6 +15,7 @@ from ofa.imagenet_classification.run_manager import ImagenetRunConfig, RunManage
 from ofa.model_zoo import ofa_net
 from ofa.utils import MyModule
 from ofa.logger import logger
+from ofa.tutorial.imagenet_eval_helper import calib_bn
 
 
 parser = argparse.ArgumentParser()
@@ -68,6 +69,7 @@ run_manager = RunManager(".tmp/eval_subnet", subnet, run_config, init=False)
 img_size = 224
 run_config.data_provider.assign_active_img_size(img_size)
 run_manager.reset_running_statistics(net=subnet)
+calib_bn(subnet, "/datasets/imagenet", img_size, args.batch_size)
 
 loss, (top1, top5) = run_manager.validate(net=subnet)
 logger.info("Vlidated")
@@ -75,10 +77,10 @@ logger.info("Results: loss=%.5f,\t top1=%.1f,\t top5=%.1f" % (loss, top1, top5))
 
 ## RESULT
 ## RTX 3070 8GB
-# mbv3w10 256
+# mbv3w10 128
 # mbv3w12 OOM
 # proxyless OOM
-# resnet50 256
+# resnet50 128
 
 ## V100 32GB
 # mbv3w12

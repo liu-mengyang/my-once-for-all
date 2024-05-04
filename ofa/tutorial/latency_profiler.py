@@ -7,14 +7,14 @@ AUTOTAILOR_HOME = os.getenv('AUTOTAILOR_HOME')
 sys.path.append(AUTOTAILOR_HOME)
 
 from infra.connector.connector import BackendConnector
-from infra.converter.converter import Converter
+from infra.convertor.convertor import Convertor
 
 
 class LatencyProfiler(object):
     def __init__(self, backend_path, command_path):
         self.command_info = json.load(open(command_path))
         self.connector = BackendConnector(backend_path)
-        self.converter = Converter()
+        self.convertor = Convertor()
         self.convert_total_time = 0
         self.send_total_time = 0
         self.profile_total_time = 0
@@ -33,7 +33,7 @@ class LatencyProfiler(object):
         profile_time = 0
         
         tik = time.time()
-        self.converter.torch2tflite(model.cpu(),
+        self.convertor.torch2tflite(model.cpu(),
                     model_name='ofa_profile',
                     data_shape=input_shape,
                     verbose=False,

@@ -4,12 +4,9 @@ import os
 import horovod.torch as hvd
 import torch
 
-from ofa.imagenet_classification.run_manager import DistributedImageNetRunConfig
-from ofa.imagenet_classification.run_manager.distributed_run_manager import (
-    DistributedRunManager,
-)
 from ofa.imagenet_classification.data_providers.imagenet import ImagenetDataProvider
-from ofa.imagenet_classification.run_manager import ImagenetRunConfig, RunManager
+from ofa.imagenet_classification.run_manager.run_config import ImagenetRunConfig
+from ofa.imagenet_classification.run_manager.run_manager import RunManager
 from ofa.model_zoo import ofa_net
 from ofa.nas.accuracy_predictor.acc_dataset import AccuracyDataset
 
@@ -56,35 +53,17 @@ def main():
         device_list = [int(_) for _ in args.gpu.split(",")]
     os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu
     
-    # Initialize Horovod
-    hvd.init()
-    # Pin GPU to be used to process local rank (one GPU per process)
-    torch.cuda.set_device(hvd.local_rank())
-    
-    num_gpus = hvd.size()
     
     ofa_network = ofa_net(args.net, pretrained=True)
-    run_config = DistributedImageNetRunConfig(test_batch_size=args.batch_size,
-                                              num_replicas=num_gpus,
-                                              n_worker=16,
-                                              rank=hvd.rank())
+    run_config = ImagenetRunConfig(test_batch_size=args.batch_size,n_worker=16)
     
-    # print run config information
-    if hvd.rank() == 0:
-        print("Run config:")
-        for k, v in run_config.config.items():
-            print("\t%s: %s" % (k, v))
-    run_manager = DistributedRunManager(
+    run_manager = RunManager(
         ".tmp/eval_subnet",
         ofa_network,
         run_config,
-        hvd.Compression.none,
-        backward_steps=4,
-        is_root=(hvd.rank() == 0),
+        init=False
     )
     run_manager.save_config()
-    # hvd broadcast
-    run_manager.broadcast()
     arch = args.net
     image_size_list = args.image_size_list
     if arch == "ofa_mbv3_d234_e346_k357_w1.0":
