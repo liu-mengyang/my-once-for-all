@@ -1,7 +1,6 @@
 import argparse
 import os
 
-import horovod.torch as hvd
 import torch
 
 from ofa.imagenet_classification.data_providers.imagenet import ImagenetDataProvider

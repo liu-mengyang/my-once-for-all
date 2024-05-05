@@ -83,5 +83,7 @@ logger.info("Results: loss=%.5f,\t top1=%.1f,\t top5=%.1f" % (loss, top1, top5))
 # resnet50 128
 
 ## V100 32GB
+# mbv3w10 1024
 # mbv3w12 512
-# proxyless 
+# proxyless 512
+# resnet50 1024
