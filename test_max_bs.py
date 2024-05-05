@@ -69,7 +69,7 @@ run_manager = RunManager(".tmp/eval_subnet", subnet, run_config, init=False)
 img_size = 224
 run_config.data_provider.assign_active_img_size(img_size)
 run_manager.reset_running_statistics(net=subnet)
-calib_bn(subnet, "/datasets/imagenet", img_size, args.batch_size)
+calib_bn(subnet, args.path, img_size, args.batch_size)
 
 loss, (top1, top5) = run_manager.validate(net=subnet)
 logger.info("Vlidated")
@@ -83,5 +83,5 @@ logger.info("Results: loss=%.5f,\t top1=%.1f,\t top5=%.1f" % (loss, top1, top5))
 # resnet50 128
 
 ## V100 32GB
-# mbv3w12
+# mbv3w12 512
 # proxyless 

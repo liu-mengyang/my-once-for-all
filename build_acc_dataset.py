@@ -92,7 +92,7 @@ def main():
     else:
         raise NotImplementedError
     
-    acc_dataset = AccuracyDataset(path)
+    acc_dataset = AccuracyDataset(path, args.path)
     acc_dataset.build_acc_dataset(run_manager,
                                   ofa_network,
                                   n_arch=args.num_samples,

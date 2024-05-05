@@ -37,8 +37,9 @@ class RegDataset(torch.utils.data.Dataset):
 
 
 class AccuracyDataset:
-    def __init__(self, path):
+    def __init__(self, path, dataset_path):
         self.path = path
+        self.dataset_path = dataset_path
         os.makedirs(self.path, exist_ok=True)
 
     @property
@@ -111,7 +112,7 @@ class AccuracyDataset:
                         continue
                     ofa_network.set_active_subnet(**net_setting)
                     subnet = ofa_network.get_active_subnet().to("cuda:0")
-                    calib_bn(subnet, "/datasets/imagenet", image_size, 256)
+                    calib_bn(subnet, self.dataset_path, image_size, 256)
                     net_setting_str = ",".join(
                         [
                             "%s_%s"
