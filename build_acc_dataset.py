@@ -64,7 +64,7 @@ def main():
     )
     run_manager.save_config()
     arch = args.net
-    image_size_list = args.image_size_list
+    image_size_list = list(map(int, args.image_size_list))
     if arch == "ofa_mbv3_d234_e346_k357_w1.0":
         path = "mbv3w10"
         if image_size_list is None:
