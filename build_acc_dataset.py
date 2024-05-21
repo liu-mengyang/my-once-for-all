@@ -37,7 +37,7 @@ def parse_args():
     )
     arg_parser.add_argument("-g", "--gpu", help="The gpu(s) to use", type=str, default="all")
     arg_parser.add_argument("-ns", "--num_samples", type=int, default=1000)
-    arg_parser.add_argument("--image_size_list", type=str, default=None)
+    arg_parser.add_argument("--image_size_list", nargs="+", default=None)
     args = arg_parser.parse_args()
     return args
 
