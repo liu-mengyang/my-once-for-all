@@ -3,6 +3,7 @@
 # International Conference on Learning Representations (ICLR), 2020.
 
 import copy
+import itertools as it
 import random
 
 from ofa.imagenet_classification.elastic_nn.modules.dynamic_layers import (
@@ -322,6 +323,36 @@ class OFAMobileNetV3(MobileNetV3):
             "d": depth_setting,
         }
 
+    def count_all_subnets(self):
+        ks_candidates = (
+            self.ks_list
+            if self.__dict__.get("_ks_include_list", None) is None
+            else self.__dict__["_ks_include_list"]
+        )
+        expand_candidates = (
+            self.expand_ratio_list
+            if self.__dict__.get("_expand_include_list", None) is None
+            else self.__dict__["_expand_include_list"]
+        )
+        depth_candidates = (
+            self.depth_list
+            if self.__dict__.get("_depth_include_list", None) is None
+            else self.__dict__["_depth_include_list"]
+        )
+        
+        ks_candidates = [ks_candidates for _ in range(len(self.blocks) - 1)]
+        expand_candidates = [expand_candidates for _ in range(len(self.blocks) - 1)]
+        depth_candidates = [
+            depth_candidates for _ in range(len(self.block_group_info))
+        ]
+        print(f"# of ks: {len(self.ks_list)}")
+        print(f"# of ks_candidates: {len(ks_candidates)}")
+        print(f"# of expand ratio: {len(self.expand_ratio_list)}")
+        print(f"# of expand_candidates: {len(expand_candidates)}")
+        print(f"# of depth: {len(self.depth_list)}")
+        print(f"# of depth_candidates: {len(depth_candidates)}")
+        
+    
     def get_active_subnet(self, preserve_weight=True):
         first_conv = copy.deepcopy(self.first_conv)
         blocks = [copy.deepcopy(self.blocks[0])]
